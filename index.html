@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI at Mission Speed</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #0a0a0f;
+  color: #c8cad0;
+  line-height: 1.7;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== CSS VARIABLES ===== */
+:root {
+  --accent: #3b82f6;
+  --accent-dim: rgba(59, 130, 246, 0.15);
+  --surface: rgba(255,255,255,0.04);
+  --surface-border: rgba(255,255,255,0.08);
+  --surface-hover: rgba(255,255,255,0.07);
+  --text-primary: #eaecf0;
+  --text-secondary: #8b8fa3;
+  --text-dim: #5a5e70;
+  --danger: #ef4444;
+  --success: #22c55e;
+  --max-w: 1200px;
+  --section-pad: clamp(80px, 12vw, 140px);
+}
+
+/* ===== TYPOGRAPHY ===== */
+.heading-display {
+  font-family: 'Bebas Neue', Impact, 'Arial Black', sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 0.95;
+  color: #ffffff;
+}
+.heading-tight {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  color: var(--text-primary);
+}
+.label-tag {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* ===== LAYOUT ===== */
+.container { max-width: var(--max-w); margin: 0 auto; padding: 0 clamp(20px, 5vw, 48px); }
+section { padding: var(--section-pad) 0; position: relative; z-index: 1; }
+
+/* ===== GRID BACKGROUND ===== */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    linear-gradient(rgba(59,130,246,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59,130,246,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(59,130,246,0.06) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ===== PROGRESS BAR ===== */
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  background: var(--accent);
+  z-index: 200;
+  transition: width 0.1s linear;
+}
+
+/* ===== HERO ===== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: 80px 0 60px;
+  z-index: 1;
+  overflow: hidden;
+}
+.hero-layout {
+  width: 100%;
+  position: relative;
+}
+.hero-text {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+.hero-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border: 1px solid var(--surface-border);
+  border-radius: 100px;
+  margin-bottom: 40px;
+  background: var(--surface);
+  backdrop-filter: blur(12px);
+}
+.hero-label .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(59,130,246,0.4); }
+  50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(59,130,246,0); }
+}
+.hero h1 {
+  font-size: clamp(3rem, 9vw, 7rem);
+  margin-bottom: 28px;
+}
+.hero h1 .gradient-text {
+  background: linear-gradient(135deg, #ffffff 0%, #3b82f6 50%, #60a5fa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-sub {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto 20px;
+  line-height: 1.65;
+  font-weight: 400;
+}
+.hero-speech {
+  font-size: clamp(0.9rem, 1.6vw, 1.05rem);
+  color: var(--text-dim);
+  max-width: 560px;
+  margin: 0 auto 44px;
+  font-style: italic;
+  line-height: 1.7;
+  border-left: 2px solid var(--accent);
+  padding-left: 20px;
+  text-align: left;
+}
+
+/* ===== GLOBE ===== */
+.hero-globe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(650px, 85vw);
+  height: min(650px, 85vw);
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 2s ease;
+  pointer-events: none;
+}
+.hero-globe.loaded {
+  opacity: 0.15;
+}
+.hero-globe canvas {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50%;
+  cursor: grab;
+  touch-action: none;
+}
+.hero-globe canvas:active { cursor: grabbing; }
+
+/* Desktop: two column, globe fully visible on right */
+@media (min-width: 1000px) {
+  .hero-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 40px;
+  }
+  .hero-text {
+    text-align: left;
+  }
+  .hero-sub {
+    margin-left: 0;
+    margin-right: auto;
+  }
+  .hero-globe {
+    position: relative;
+    top: auto; left: auto;
+    transform: none;
+    width: 100%;
+    max-width: 540px;
+    height: auto;
+    aspect-ratio: 1;
+    justify-self: center;
+    pointer-events: auto;
+  }
+  .hero-globe.loaded {
+    opacity: 1;
+  }
+}
+
+/* ===== CTA BUTTON ===== */
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 36px;
+  background: var(--accent);
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.cta-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(59,130,246,0.35); }
+.cta-btn:hover::before { opacity: 1; }
+.cta-btn svg { width: 18px; height: 18px; transition: transform 0.3s ease; }
+.cta-btn:hover svg { transform: translateX(3px); }
+
+/* ===== QUOTE POPUP SYSTEM ===== */
+.quote-layer {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 100;
+  pointer-events: none;
+}
+.quote-card {
+  width: 380px;
+  max-width: calc(100vw - 48px);
+  background: rgba(15, 15, 25, 0.92);
+  backdrop-filter: blur(24px);
+  border: 1px solid var(--surface-border);
+  border-radius: 14px;
+  padding: 24px;
+  opacity: 0;
+  transform: translateY(20px) scale(0.96);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(59,130,246,0.08);
+}
+.quote-card.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.quote-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.quote-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #fff;
+  flex-shrink: 0;
+}
+.quote-logo.dod { background: linear-gradient(135deg, #1e3a5f, #2563eb); }
+.quote-logo.wh { background: linear-gradient(135deg, #1e293b, #334155); }
+.quote-logo.cn { background: linear-gradient(135deg, #991b1b, #dc2626); }
+.quote-logo.press { background: linear-gradient(135deg, #0f172a, #475569); }
+.quote-source-info { flex: 1; min-width: 0; }
+.quote-source-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.quote-date {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+.quote-text {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #fff;
+  line-height: 1.55;
+  margin-bottom: 14px;
+  position: relative;
+  padding-left: 14px;
+  border-left: 2px solid var(--accent);
+}
+.quote-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.quote-badge.official { background: rgba(59,130,246,0.15); color: #60a5fa; }
+.quote-badge.reporting { background: rgba(251,146,60,0.15); color: #fb923c; }
+.quote-badge.competitor { background: rgba(239,68,68,0.15); color: #f87171; }
+.quote-badge svg { width: 10px; height: 10px; }
+
+/* ===== SECTION HEADERS ===== */
+.section-label { margin-bottom: 16px; }
+.section-title {
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  margin-bottom: 24px;
+}
+.section-desc {
+  font-size: clamp(1rem, 1.8vw, 1.15rem);
+  color: var(--text-secondary);
+  max-width: 720px;
+  line-height: 1.75;
+}
+
+/* ===== DIVIDER ===== */
+.divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--surface-border), transparent);
+}
+
+/* ===== BIGGER THAN PROMPTING ===== */
+.capability-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin-top: 48px;
+}
+.capability-item {
+  padding: 28px;
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.capability-item::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.capability-item:hover { background: var(--surface-hover); border-color: rgba(59,130,246,0.2); }
+.capability-item:hover::before { opacity: 1; }
+.capability-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  background: var(--accent-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  color: var(--accent);
+}
+.capability-item h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+.capability-item p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ===== WHY NOW ===== */
+.speech-block {
+  max-width: 800px;
+  margin: 48px auto 0;
+}
+.speech-block p {
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  line-height: 1.8;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+.speech-block strong { color: var(--text-primary); font-weight: 600; }
+.speech-block .highlight { color: var(--accent); font-weight: 600; }
+
+/* ===== USE CASE CARDS ===== */
+.usecase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 20px;
+  margin-top: 48px;
+}
+.usecase-card {
+  padding: 32px;
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: 14px;
+  transition: all 0.4s ease;
+}
+.usecase-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(59,130,246,0.25);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3), 0 0 0 1px rgba(59,130,246,0.1);
+}
+.usecase-icon {
+  font-size: 1.6rem;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px; height: 48px;
+  background: var(--accent-dim);
+  border-radius: 12px;
+}
+.usecase-card h4 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+  letter-spacing: -0.02em;
+}
+.usecase-card p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.usecase-tag {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 3px 10px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid var(--accent-dim);
+  border-radius: 100px;
+}
+
+/* ===== COMPARISON ===== */
+.compare-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 48px;
+}
+@media (max-width: 700px) { .compare-container { grid-template-columns: 1fr; } }
+.compare-panel {
+  padding: 36px;
+  border-radius: 16px;
+  border: 1px solid var(--surface-border);
+}
+.compare-panel.old {
+  background: rgba(239,68,68,0.04);
+  border-color: rgba(239,68,68,0.15);
+}
+.compare-panel.new {
+  background: rgba(59,130,246,0.04);
+  border-color: rgba(59,130,246,0.15);
+}
+.compare-panel h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  letter-spacing: -0.02em;
+}
+.compare-panel.old h3 { color: #f87171; }
+.compare-panel.new h3 { color: #60a5fa; }
+.compare-list { list-style: none; }
+.compare-list li {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 0.92rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  color: var(--text-secondary);
+}
+.compare-list li:last-child { border-bottom: none; }
+.compare-list li .icon {
+  flex-shrink: 0;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  margin-top: 2px;
+}
+.compare-panel.old .icon { background: rgba(239,68,68,0.15); color: #f87171; }
+.compare-panel.new .icon { background: rgba(59,130,246,0.15); color: #60a5fa; }
+
+/* ===== GUARDRAILS ===== */
+.guardrails-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 48px;
+}
+.guardrail-item {
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: 12px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+.guardrail-item:hover { border-color: rgba(34,197,94,0.25); }
+.guardrail-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  background: rgba(34,197,94,0.1);
+  color: #22c55e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+}
+.guardrail-item h4 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.guardrail-item p {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+/* ===== CLOSING ===== */
+.closing { text-align: center; }
+.closing-text {
+  max-width: 800px;
+  margin: 0 auto 48px;
+}
+.closing-text p {
+  font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+  line-height: 1.75;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+.closing-text .bold-line {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.3;
+}
+.closing-banner {
+  padding: 40px;
+  background: linear-gradient(135deg, rgba(59,130,246,0.1) 0%, rgba(59,130,246,0.02) 100%);
+  border: 1px solid rgba(59,130,246,0.2);
+  border-radius: 20px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+.closing-banner p {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+/* ===== ANIMATIONS ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ===== PATH BACKGROUND ===== */
+.path-bg {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+.path-bg svg { width: 100%; height: 100%; }
+
+/* ===== SCROLL TOP ===== */
+.scroll-top {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  backdrop-filter: blur(12px);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  z-index: 90;
+}
+.scroll-top.visible { opacity: 1; transform: translateY(0); }
+.scroll-top:hover { background: var(--surface-hover); color: #fff; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  .quote-layer { bottom: 16px; right: 16px; left: 16px; }
+  .quote-card { width: 100%; }
+  .hero { min-height: auto; padding: 100px 0 80px; }
+  .guardrails-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+}
+</style>
+</head>
+<body>
+
+<!-- Progress Bar -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Animated Path Background -->
+<div class="path-bg" id="pathBg">
+  <svg viewBox="0 0 1440 900" fill="none" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"></svg>
+</div>
+
+<!-- ===== QUOTE POPUP LAYER ===== -->
+<div class="quote-layer" id="quoteLayer">
+  <div class="quote-card" id="quoteCard">
+    <div class="quote-card-header">
+      <div class="quote-logo" id="quoteLogo"></div>
+      <div class="quote-source-info">
+        <div class="quote-source-name" id="quoteSource"></div>
+        <div class="quote-date" id="quoteDate"></div>
+      </div>
+    </div>
+    <div class="quote-text" id="quoteText"></div>
+    <div id="quoteBadge"></div>
+  </div>
+</div>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="hero">
+  <div class="container hero-layout">
+    <div class="hero-text">
+      <div class="hero-label reveal">
+        <span class="dot"></span>
+        <span class="label-tag">56th Fighter Wing / AI Task Force</span>
+      </div>
+
+      <h1 class="heading-display reveal reveal-delay-1">
+        THE FUTURE FORCE<br>IS <span class="gradient-text">AI ENABLED</span>
+      </h1>
+
+      <p class="hero-sub reveal reveal-delay-2">
+        AI is not a future experiment. It is an operational advantage that our competitors are already deploying at national scale. The Air Force must move now or fall behind.
+      </p>
+
+      <div class="hero-speech reveal reveal-delay-3">
+        Every day we delay is a day our adversaries gain ground. This is not about replacing Airmen. It is about freeing them from clerical drag so they can think faster, decide faster, and act faster. The question is not whether AI is coming. The question is whether we lead or lag.
+      </div>
+
+      <a href="https://chat.genai.army.mil/login?code=CDAO-OSD" target="_blank" rel="noopener" class="cta-btn reveal reveal-delay-4">
+        Adopt AI at Mission Speed
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+    </div>
+
+    <!-- COBE Globe -->
+    <div class="hero-globe" id="heroGlobe">
+      <canvas id="globeCanvas"></canvas>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== BIGGER THAN PROMPTING ===== -->
+<section id="bigger">
+  <div class="container">
+    <div class="section-label label-tag reveal">Beyond the Chatbot</div>
+    <h2 class="section-title heading-tight reveal reveal-delay-1">This is bigger than prompting.</h2>
+    <p class="section-desc reveal reveal-delay-2">
+      A chatbot that answers questions is a starting point, not the end state. The real power of AI is enterprise integration: systems that compress decision cycles, automate clerical work, search trusted knowledge at speed, and act as mission copilots across every function on this installation.
+    </p>
+
+    <div class="capability-grid">
+      <div class="capability-item reveal">
+        <div class="capability-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+        </div>
+        <h4>Enterprise AI Systems</h4>
+        <p>Connected platforms that serve the entire wing, not isolated tools sitting on one desktop.</p>
+      </div>
+      <div class="capability-item reveal reveal-delay-1">
+        <div class="capability-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <h4>Mission Copilots</h4>
+        <p>Role specific assistants that understand your mission context, your data, and your standards.</p>
+      </div>
+      <div class="capability-item reveal reveal-delay-2">
+        <div class="capability-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <h4>Workflow Automation</h4>
+        <p>Multi step task execution that removes repetitive admin work from trained warfighters.</p>
+      </div>
+      <div class="capability-item reveal reveal-delay-3">
+        <div class="capability-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </div>
+        <h4>Intelligent Knowledge Search</h4>
+        <p>Search across regulations, guidance, reports, and local data with AI that understands context.</p>
+      </div>
+      <div class="capability-item reveal reveal-delay-4">
+        <div class="capability-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </div>
+        <h4>Decision Support</h4>
+        <p>AI that surfaces the right information at the right time to compress decision cycles under pressure.</p>
+      </div>
+      <div class="capability-item reveal">
+        <div class="capability-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h4>Cross Functional Assistants</h4>
+        <p>Operations, logistics, maintenance, intel, cyber, medical admin, personnel, and weather under one AI layer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== WHY NOW ===== -->
+<section id="whynow">
+  <div class="container">
+    <div class="section-label label-tag reveal">Strategic Urgency</div>
+    <h2 class="section-title heading-tight reveal reveal-delay-1">Why this matters now.</h2>
+    <div class="speech-block reveal reveal-delay-2">
+      <p>
+        Our competitors are not waiting. China has declared AI a national strategic priority and is pushing integration across its military, its economy, and its governance infrastructure at a pace that should concern every leader in this room. Their stated goal is not to experiment. It is to <strong>dominate</strong>.
+      </p>
+      <p>
+        The Department of Defense has recognized this. The Pentagon is already moving to deploy frontier AI capabilities across all classification levels. The White House has called winning the AI race <span class="highlight">non negotiable</span>. The 2026 DoD AI Strategy says the time to accelerate is now, not next year, not next budget cycle. Now.
+      </p>
+      <p>
+        Waiting for perfect conditions is a losing strategy. There will never be a day when every security concern is resolved, every policy is finalized, and every stakeholder is comfortable. The right approach is <strong>practical adoption with guardrails</strong>: start where you can, learn fast, scale what works, and maintain human oversight at every step.
+      </p>
+      <p>
+        This is not a technology novelty. It is a <strong>readiness issue</strong>. Every hour an Airman spends on a task that AI could handle in seconds is an hour taken from mission preparation, training, and critical thinking. That cost compounds across every shop, every squadron, and every wing.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== ENTERPRISE USE CASES ===== -->
+<section id="usecases">
+  <div class="container">
+    <div class="section-label label-tag reveal">Enterprise Vision</div>
+    <h2 class="section-title heading-tight reveal reveal-delay-1">What Air Force wide AI could look like.</h2>
+    <p class="section-desc reveal reveal-delay-2">
+      These are not concepts for 2035. These are capabilities that can be built, piloted, and scaled on existing platforms today.
+    </p>
+
+    <div class="usecase-grid">
+      <div class="usecase-card reveal">
+        <div class="usecase-icon">&#9729;</div>
+        <h4>Weather Copilot</h4>
+        <p>Automates product quality checks, accelerates mission weather briefings, and surfaces forecast risks before they become operational surprises. Hours of manual review compressed into minutes.</p>
+        <span class="usecase-tag">Operations</span>
+      </div>
+      <div class="usecase-card reveal reveal-delay-1">
+        <div class="usecase-icon">&#9881;</div>
+        <h4>Maintenance Copilot</h4>
+        <p>Predicts component failures, prioritizes work orders by mission impact, and searches technical orders instantly. Fewer grounded jets, faster sortie generation.</p>
+        <span class="usecase-tag">Maintenance</span>
+      </div>
+      <div class="usecase-card reveal reveal-delay-2">
+        <div class="usecase-icon">&#9878;</div>
+        <h4>Logistics Copilot</h4>
+        <p>Tracks supply chain status, flags shortages before they stall operations, and automates routine requisition workflows. Less time chasing parts, more time executing.</p>
+        <span class="usecase-tag">Logistics</span>
+      </div>
+      <div class="usecase-card reveal reveal-delay-3">
+        <div class="usecase-icon">&#9670;</div>
+        <h4>Intel Triage Assistant</h4>
+        <p>Rapidly processes incoming reports, highlights key threat changes, and cross references against known patterns. Analysts spend less time sorting and more time analyzing.</p>
+        <span class="usecase-tag">Intelligence</span>
+      </div>
+      <div class="usecase-card reveal">
+        <div class="usecase-icon">&#128269;</div>
+        <h4>Base Knowledge Search</h4>
+        <p>Unified search across AFIs, local OIs, memorandums, and base guidance. Ask a question in plain language, get the answer with the source citation. No more digging through portals.</p>
+        <span class="usecase-tag">Enterprise</span>
+      </div>
+      <div class="usecase-card reveal reveal-delay-1">
+        <div class="usecase-icon">&#9889;</div>
+        <h4>Staff Workflow Automation</h4>
+        <p>Drafts coordination packages, formats award submissions, generates status reports, and routes approvals. Free staff from formatting and let them focus on substance.</p>
+        <span class="usecase-tag">Administration</span>
+      </div>
+      <div class="usecase-card reveal reveal-delay-2">
+        <div class="usecase-icon">&#127919;</div>
+        <h4>Training and Readiness Assistant</h4>
+        <p>Tracks qualification statuses, flags upcoming expirations, generates training scenarios, and aligns readiness reporting. Commanders see the picture faster.</p>
+        <span class="usecase-tag">Readiness</span>
+      </div>
+      <div class="usecase-card reveal reveal-delay-3">
+        <div class="usecase-icon">&#9733;</div>
+        <h4>Commander Decision Support</h4>
+        <p>Aggregates operational status, personnel readiness, resource availability, and risk indicators into a single AI powered brief. Less time gathering data, more time commanding.</p>
+        <span class="usecase-tag">Leadership</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== COMPARISON ===== -->
+<section id="compare">
+  <div class="container">
+    <div class="section-label label-tag reveal">The Shift</div>
+    <h2 class="section-title heading-tight reveal reveal-delay-1">More than a chatbot.</h2>
+    <p class="section-desc reveal reveal-delay-2">
+      The difference between where most organizations start with AI and where they need to go is the difference between a tool and a capability.
+    </p>
+
+    <div class="compare-container reveal reveal-delay-3">
+      <div class="compare-panel old">
+        <h3>AI as a Chatbot</h3>
+        <ul class="compare-list">
+          <li><span class="icon">&times;</span> Isolated prompting on a single screen</li>
+          <li><span class="icon">&times;</span> One user at a time, no shared context</li>
+          <li><span class="icon">&times;</span> Manual copy and paste into workflows</li>
+          <li><span class="icon">&times;</span> No connection to operational data</li>
+          <li><span class="icon">&times;</span> Limited, inconsistent operational impact</li>
+        </ul>
+      </div>
+      <div class="compare-panel new">
+        <h3>AI as Enterprise Capability</h3>
+        <ul class="compare-list">
+          <li><span class="icon">&#10003;</span> Connected to trusted data and systems</li>
+          <li><span class="icon">&#10003;</span> Role based mission copilots across functions</li>
+          <li><span class="icon">&#10003;</span> Automated workflow execution end to end</li>
+          <li><span class="icon">&#10003;</span> Shared knowledge layer for the entire wing</li>
+          <li><span class="icon">&#10003;</span> Compressed decision cycles, faster planning</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== GUARDRAILS ===== -->
+<section id="guardrails">
+  <div class="container">
+    <div class="section-label label-tag reveal">Responsible Adoption</div>
+    <h2 class="section-title heading-tight reveal reveal-delay-1">Built with guardrails, not recklessness.</h2>
+    <p class="section-desc reveal reveal-delay-2">
+      Speed does not mean carelessness. Every AI capability we field must meet the standards our mission demands.
+    </p>
+
+    <div class="guardrails-grid">
+      <div class="guardrail-item reveal">
+        <div class="guardrail-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        </div>
+        <h4>Human in the Loop</h4>
+        <p>Airmen review, validate, and approve. AI advises, it does not decide.</p>
+      </div>
+      <div class="guardrail-item reveal reveal-delay-1">
+        <div class="guardrail-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h4>Approved Data Sources</h4>
+        <p>AI only accesses vetted, authorized datasets. No uncontrolled scraping.</p>
+      </div>
+      <div class="guardrail-item reveal reveal-delay-2">
+        <div class="guardrail-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <h4>Auditability</h4>
+        <p>Every AI action is logged and traceable for accountability.</p>
+      </div>
+      <div class="guardrail-item reveal reveal-delay-3">
+        <div class="guardrail-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <h4>Secure Deployment</h4>
+        <p>Built on DoD approved platforms with proper IL compliance.</p>
+      </div>
+      <div class="guardrail-item reveal">
+        <div class="guardrail-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <h4>Unclassified First Pilots</h4>
+        <p>Start where risk is lowest. Prove value, then expand.</p>
+      </div>
+      <div class="guardrail-item reveal reveal-delay-1">
+        <div class="guardrail-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6m-7-7h6m6 0h6"/></svg>
+        </div>
+        <h4>Role Based Access</h4>
+        <p>AI capabilities scoped to duty position and need to know.</p>
+      </div>
+      <div class="guardrail-item reveal reveal-delay-2">
+        <div class="guardrail-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.66 0 3-4.03 3-9s-1.34-9-3-9m0 18c-1.66 0-3-4.03-3-9s1.34-9 3-9"/></svg>
+        </div>
+        <h4>Phased Scaling</h4>
+        <p>Start small, measure results, scale what works across the enterprise.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== CLOSING ===== -->
+<section class="closing" id="closing">
+  <div class="container">
+    <h2 class="section-title heading-display reveal" style="font-size: clamp(2.5rem, 7vw, 5rem);">
+      THE FUTURE IS<br>AI ENABLED,<br>HUMAN LED.
+    </h2>
+
+    <div class="closing-text reveal reveal-delay-1">
+      <p>
+        AI is coming to every corner of the Department of Defense. That is not a prediction. It is already happening. The only question left is whether this installation leads the charge or spends years catching up.
+      </p>
+      <p>
+        We do not need to replace a single Airman. We need to <strong>free every Airman</strong> from the clerical drag that steals hours from their real mission. When an Airman spends 40 minutes formatting a product that AI could check in 40 seconds, that is not tradition. That is waste.
+      </p>
+      <p class="bold-line">
+        The future force thinks faster, decides faster, and acts faster because AI handles the weight so Airmen can carry the mission.
+      </p>
+    </div>
+
+    <div class="closing-banner reveal reveal-delay-2">
+      <p>The shift starts here. Not someday. Now.</p>
+      <a href="https://chat.genai.army.mil/login?code=CDAO-OSD" target="_blank" rel="noopener" class="cta-btn">
+        Build the Future Force
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div style="height: 80px;"></div>
+
+<!-- Scroll to Top -->
+<button class="scroll-top" id="scrollTop" aria-label="Scroll to top">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m18 15-6-6-6 6"/></svg>
+</button>
+
+<!-- ===== COBE GLOBE LIBRARY ===== -->
+<script src="https://unpkg.com/cobe"></script>
+
+<script>
+// ===== QUOTE DATA =====
+const quotes = [
+  {
+    source: "Deputy Secretary of Defense Kathleen Hicks",
+    date: "February 21, 2024",
+    text: "\u201CThese technologies give us an even better decision advantage.\u201D",
+    logoClass: "dod", logoText: "DoD",
+    badgeType: "official", badgeLabel: "Official Source"
+  },
+  {
+    source: "Artificial Intelligence Strategy for the Department of Defense",
+    date: "January 9, 2026",
+    text: "\u201CThe time is now to accelerate AI integration.\u201D",
+    logoClass: "dod", logoText: "DoD",
+    badgeType: "official", badgeLabel: "Official Source"
+  },
+  {
+    source: "White House AI Action Plan Release",
+    date: "July 23, 2025",
+    text: "\u201CWinning the AI Race is non\u2011negotiable.\u201D",
+    logoClass: "wh", logoText: "WH",
+    badgeType: "official", badgeLabel: "Official Source"
+  },
+  {
+    source: "China State Council \u2018AI Plus\u2019 Guideline",
+    date: "August 27, 2025",
+    text: "\u201CPromoting the extensive and in\u2011depth integration of AI.\u201D",
+    logoClass: "cn", logoText: "PRC",
+    badgeType: "competitor", badgeLabel: "Competitor Signal"
+  },
+  {
+    source: "China Official Internet and AI Adoption Report",
+    date: "February 5, 2026",
+    text: "\u201CBecoming a key engine driving the digital and intelligent transformation of society.\u201D",
+    logoClass: "cn", logoText: "PRC",
+    badgeType: "competitor", badgeLabel: "Competitor Signal"
+  },
+  {
+    source: "Reuters Reporting on Pentagon Deployment",
+    date: "February 11, 2026",
+    text: "\u201CMoving to deploy frontier AI capabilities across all classification levels.\u201D",
+    logoClass: "press", logoText: "RTR",
+    badgeType: "reporting", badgeLabel: "Reporting"
+  }
+];
+
+// ===== QUOTE ROTATION =====
+let currentQuote = 0;
+const quoteCard = document.getElementById('quoteCard');
+const quoteLogo = document.getElementById('quoteLogo');
+const quoteSource = document.getElementById('quoteSource');
+const quoteDate = document.getElementById('quoteDate');
+const quoteText = document.getElementById('quoteText');
+const quoteBadge = document.getElementById('quoteBadge');
+
+function showQuote(index) {
+  const q = quotes[index];
+  quoteCard.classList.remove('visible');
+  setTimeout(() => {
+    quoteLogo.className = 'quote-logo ' + q.logoClass;
+    quoteLogo.textContent = q.logoText;
+    quoteSource.textContent = q.source;
+    quoteDate.textContent = q.date;
+    quoteText.textContent = q.text;
+    const svgCheck = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
+    quoteBadge.innerHTML = '<span class="quote-badge ' + q.badgeType + '">' + svgCheck + q.badgeLabel + '</span>';
+    quoteCard.classList.add('visible');
+  }, 400);
+}
+
+setTimeout(function() {
+  showQuote(currentQuote);
+  setInterval(function() {
+    currentQuote = (currentQuote + 1) % quotes.length;
+    showQuote(currentQuote);
+  }, 5500);
+}, 2000);
+
+// ===== SCROLL REVEAL =====
+var reveals = document.querySelectorAll('.reveal');
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+reveals.forEach(function(el) { observer.observe(el); });
+
+// ===== PROGRESS BAR =====
+var progressBar = document.getElementById('progressBar');
+window.addEventListener('scroll', function() {
+  var scrollTop = window.scrollY;
+  var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  progressBar.style.width = (scrollTop / docHeight * 100) + '%';
+}, { passive: true });
+
+// ===== SCROLL TOP BUTTON =====
+var scrollTopBtn = document.getElementById('scrollTop');
+window.addEventListener('scroll', function() {
+  scrollTopBtn.classList.toggle('visible', window.scrollY > 600);
+}, { passive: true });
+scrollTopBtn.addEventListener('click', function() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// ===== ANIMATED PATH BACKGROUND =====
+(function() {
+  var svg = document.querySelector('#pathBg svg');
+  for (var i = 0; i < 28; i++) {
+    var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    var offset = i * 18;
+    path.setAttribute('d',
+      'M' + (-200 + offset) + ' ' + (-100 + i * 35) +
+      ' C' + (200 + offset) + ' ' + (200 + i * 20) +
+      ' ' + (800 - offset) + ' ' + (600 + i * 15) +
+      ' ' + (1640 - offset) + ' ' + (900 + i * 10)
+    );
+    path.setAttribute('stroke', 'rgba(255,255,255,' + (0.015 + i * 0.003) + ')');
+    path.setAttribute('stroke-width', (0.5 + i * 0.04).toFixed(2));
+    path.setAttribute('fill', 'none');
+    path.style.strokeDasharray = '3000';
+    path.style.strokeDashoffset = '3000';
+    path.style.animation = 'drawPath ' + (15 + Math.random() * 20) + 's linear infinite';
+    path.style.animationDelay = (i * 0.4) + 's';
+    svg.appendChild(path);
+  }
+  var style = document.createElement('style');
+  style.textContent = '@keyframes drawPath { 0% { stroke-dashoffset: 3000; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { stroke-dashoffset: -3000; opacity: 0; } }';
+  document.head.appendChild(style);
+})();
+
+// ===== COBE GLOBE =====
+(function() {
+  var canvas = document.getElementById('globeCanvas');
+  var container = document.getElementById('heroGlobe');
+  if (!canvas) return;
+
+  // Wait for COBE to load (CDN is async)
+  function waitForCobe(cb) {
+    if (typeof COBE !== 'undefined') return cb();
+    var tries = 0;
+    var interval = setInterval(function() {
+      tries++;
+      if (typeof COBE !== 'undefined') { clearInterval(interval); cb(); }
+      if (tries > 100) clearInterval(interval); // give up after 10s
+    }, 100);
+  }
+
+  waitForCobe(function() {
+    var phi = 0;
+    var pointerDown = null;
+    var dragPhi = 0;
+    var dragTheta = 0;
+    var phiOffset = 0;
+    var thetaOffset = 0;
+    var paused = false;
+
+    // Military relevant markers
+    var markers = [
+      { location: [33.54, -112.38], size: 0.06 },  // Luke AFB, AZ
+      { location: [38.95, -77.45],  size: 0.04 },   // Pentagon / DC
+      { location: [36.23, -115.03], size: 0.03 },   // Nellis AFB
+      { location: [30.63, -87.35],  size: 0.03 },   // Eglin AFB
+      { location: [51.15, -0.18],   size: 0.03 },   // RAF Lakenheath area
+      { location: [35.45, 136.92],  size: 0.03 },   // Yokota AB area
+      { location: [26.35, 127.77],  size: 0.03 },   // Kadena AB
+      { location: [36.06, 120.33],  size: 0.02 },   // Qingdao CN
+      { location: [39.91, 116.39],  size: 0.02 },   // Beijing
+      { location: [31.23, 121.47],  size: 0.02 },   // Shanghai
+      { location: [55.75, 37.62],   size: 0.02 },   // Moscow
+      { location: [25.29, 51.53],   size: 0.03 },   // Al Udeid AB area
+      { location: [49.01, 8.39],    size: 0.03 },   // Ramstein AB
+      { location: [36.37, 127.10],  size: 0.03 },   // Osan AB area
+    ];
+
+    function initGlobe() {
+      var width = canvas.offsetWidth;
+      if (width === 0) return;
+
+      var globe = COBE.default(canvas, {
+        devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
+        width: width * 2,
+        height: width * 2,
+        phi: 1.5,
+        theta: 0.25,
+        dark: 1,
+        diffuse: 1.2,
+        mapSamples: 16000,
+        mapBrightness: 4,
+        baseColor: [0.15, 0.18, 0.3],
+        markerColor: [0.23, 0.51, 0.96],
+        glowColor: [0.08, 0.12, 0.25],
+        markers: markers,
+        opacity: 0.85,
+        onRender: function(state) {
+          if (!paused) phi += 0.003;
+          state.phi = phi + phiOffset + dragPhi;
+          state.theta = 0.25 + thetaOffset + dragTheta;
+        }
+      });
+
+      container.classList.add('loaded');
+
+      // Drag interaction
+      canvas.addEventListener('pointerdown', function(e) {
+        pointerDown = { x: e.clientX, y: e.clientY };
+        canvas.style.cursor = 'grabbing';
+        paused = true;
+      });
+
+      window.addEventListener('pointermove', function(e) {
+        if (pointerDown) {
+          dragPhi = (e.clientX - pointerDown.x) / 300;
+          dragTheta = (e.clientY - pointerDown.y) / 600;
+        }
+      }, { passive: true });
+
+      window.addEventListener('pointerup', function() {
+        if (pointerDown) {
+          phiOffset += dragPhi;
+          thetaOffset += dragTheta;
+          dragPhi = 0;
+          dragTheta = 0;
+        }
+        pointerDown = null;
+        canvas.style.cursor = 'grab';
+        paused = false;
+      }, { passive: true });
+    }
+
+    // Wait for canvas to be sized
+    if (canvas.offsetWidth > 0) {
+      initGlobe();
+    } else {
+      var ro = new ResizeObserver(function(entries) {
+        if (entries[0] && entries[0].contentRect.width > 0) {
+          ro.disconnect();
+          initGlobe();
+        }
+      });
+      ro.observe(canvas);
+    }
+  });
+})();
+</script>
+</body>
+</html>
