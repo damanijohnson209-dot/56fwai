@@ -13,7 +13,11 @@
 html { scroll-behavior: smooth; font-size: 16px; }
 body {
   font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: #0a0a0f;
+  background-color: #0a0a0f;
+  background-image:
+    linear-gradient(rgba(59,130,246,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59,130,246,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
   color: #c8cad0;
   line-height: 1.7;
   overflow-x: hidden;
@@ -65,25 +69,7 @@ body {
 section { padding: var(--section-pad) 0; position: relative; z-index: 1; }
 
 /* ===== GRID BACKGROUND ===== */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background:
-    linear-gradient(rgba(59,130,246,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(59,130,246,0.03) 1px, transparent 1px);
-  background-size: 60px 60px;
-  pointer-events: none;
-  z-index: 0;
-}
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(59,130,246,0.06) 0%, transparent 60%);
-  pointer-events: none;
-  z-index: 0;
-}
+/* Static background image on body - no fixed pseudo-elements */
 
 /* ===== PROGRESS BAR ===== */
 .progress-bar {
@@ -122,8 +108,7 @@ body::after {
   border: 1px solid var(--surface-border);
   border-radius: 100px;
   margin-bottom: 40px;
-  background: var(--surface);
-  backdrop-filter: blur(12px);
+  background: rgba(15, 15, 25, 0.8);
 }
 .hero-label .dot {
   width: 6px; height: 6px;
@@ -256,14 +241,13 @@ body::after {
 .quote-card {
   width: 380px;
   max-width: calc(100vw - 48px);
-  background: rgba(15, 15, 25, 0.92);
-  backdrop-filter: blur(24px);
+  background: rgba(15, 15, 25, 0.95);
   border: 1px solid var(--surface-border);
   border-radius: 14px;
   padding: 24px;
   opacity: 0;
   transform: translateY(20px) scale(0.96);
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: auto;
   box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(59,130,246,0.08);
 }
@@ -368,7 +352,7 @@ body::after {
   background: var(--surface);
   border: 1px solid var(--surface-border);
   border-radius: 12px;
-  transition: all 0.3s ease;
+  transition: background 0.3s ease, border-color 0.3s ease;
   position: relative;
   overflow: hidden;
 }
@@ -431,7 +415,7 @@ body::after {
   background: var(--surface);
   border: 1px solid var(--surface-border);
   border-radius: 14px;
-  transition: all 0.4s ease;
+  transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
 }
 .usecase-card:hover {
   transform: translateY(-4px);
@@ -539,7 +523,7 @@ body::after {
   border: 1px solid var(--surface-border);
   border-radius: 12px;
   text-align: center;
-  transition: all 0.3s ease;
+  transition: border-color 0.3s ease;
 }
 .guardrail-item:hover { border-color: rgba(34,197,94,0.25); }
 .guardrail-icon {
@@ -610,17 +594,6 @@ body::after {
 .reveal-delay-3 { transition-delay: 0.3s; }
 .reveal-delay-4 { transition-delay: 0.4s; }
 
-/* ===== PATH BACKGROUND ===== */
-.path-bg {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.4;
-}
-.path-bg svg { width: 100%; height: 100%; }
-
 /* ===== SCROLL TOP ===== */
 .scroll-top {
   position: fixed;
@@ -628,20 +601,18 @@ body::after {
   left: 24px;
   width: 44px; height: 44px;
   border-radius: 50%;
-  background: var(--surface);
+  background: rgba(15, 15, 25, 0.9);
   border: 1px solid var(--surface-border);
-  backdrop-filter: blur(12px);
   color: var(--text-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   opacity: 0;
-  transform: translateY(10px);
-  transition: all 0.3s ease;
+  transition: opacity 0.3s ease;
   z-index: 90;
 }
-.scroll-top.visible { opacity: 1; transform: translateY(0); }
+.scroll-top.visible { opacity: 1; }
 .scroll-top:hover { background: var(--surface-hover); color: #fff; }
 
 /* ===== RESPONSIVE ===== */
@@ -657,11 +628,6 @@ body::after {
 
 <!-- Progress Bar -->
 <div class="progress-bar" id="progressBar"></div>
-
-<!-- Animated Path Background -->
-<div class="path-bg" id="pathBg">
-  <svg viewBox="0 0 1440 900" fill="none" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"></svg>
-</div>
 
 <!-- ===== QUOTE POPUP LAYER ===== -->
 <div class="quote-layer" id="quoteLayer">
@@ -1104,32 +1070,6 @@ window.addEventListener('scroll', function() {
 scrollTopBtn.addEventListener('click', function() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
-
-// ===== ANIMATED PATH BACKGROUND =====
-(function() {
-  var svg = document.querySelector('#pathBg svg');
-  for (var i = 0; i < 28; i++) {
-    var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    var offset = i * 18;
-    path.setAttribute('d',
-      'M' + (-200 + offset) + ' ' + (-100 + i * 35) +
-      ' C' + (200 + offset) + ' ' + (200 + i * 20) +
-      ' ' + (800 - offset) + ' ' + (600 + i * 15) +
-      ' ' + (1640 - offset) + ' ' + (900 + i * 10)
-    );
-    path.setAttribute('stroke', 'rgba(255,255,255,' + (0.015 + i * 0.003) + ')');
-    path.setAttribute('stroke-width', (0.5 + i * 0.04).toFixed(2));
-    path.setAttribute('fill', 'none');
-    path.style.strokeDasharray = '3000';
-    path.style.strokeDashoffset = '3000';
-    path.style.animation = 'drawPath ' + (15 + Math.random() * 20) + 's linear infinite';
-    path.style.animationDelay = (i * 0.4) + 's';
-    svg.appendChild(path);
-  }
-  var style = document.createElement('style');
-  style.textContent = '@keyframes drawPath { 0% { stroke-dashoffset: 3000; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { stroke-dashoffset: -3000; opacity: 0; } }';
-  document.head.appendChild(style);
-})();
 
 // ===== COBE GLOBE =====
 (function() {
